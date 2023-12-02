@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"github.com/avenue9977/advent-of-code-2023/utils"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -43,14 +41,10 @@ func (g *MiniGame) isValid() bool {
 }
 
 func day2Part1() {
-	file, err := os.Open("./day02/input/day02.txt")
+	fileScanner, err := utils.GetFileScanner("./day02/input/day02.txt")
 	if err != nil {
-		fmt.Printf("error opening file: %v\n", err)
 		os.Exit(1)
 	}
-
-	fileScanner := bufio.NewScanner(file)
-	fileScanner.Split(bufio.ScanLines)
 
 	sum := 0
 
@@ -70,35 +64,24 @@ func day2Part1() {
 	}
 
 	println(sum)
-
-	err = file.Close()
-	if err != nil {
-		return
-	}
 }
 
 func getGameId(str string) int {
 	split := strings.Fields(str)
-	num, err := strconv.Atoi(split[1])
-
-	if err != nil {
-		panic("Failed to convert gameId")
-	}
-
-	return num
+	return utils.ConvertStringToInt(split[1])
 }
 
 func getMiniGames(str string) []MiniGame {
-	var games []MiniGame
-	innerGames := strings.Split(str, "; ")
+	games := getGames(str)
+	var miniGames []MiniGame
 
-	for _, game := range innerGames {
-		gameColors := strings.Split(game, ", ")
+	for _, game := range games {
+		gameColors := getGameColors(game)
 		miniGame := MiniGame{}
 
 		for _, colorString := range gameColors {
-			colorPair := strings.Split(colorString, " ")
-			colorCount, _ := strconv.Atoi(colorPair[0])
+			colorPair := getColorCountPair(colorString)
+			colorCount := utils.ConvertStringToInt(colorPair[0])
 			color := colorPair[1]
 
 			switch color {
@@ -114,8 +97,20 @@ func getMiniGames(str string) []MiniGame {
 			}
 		}
 
-		games = append(games, miniGame)
+		miniGames = append(miniGames, miniGame)
 	}
 
-	return games
+	return miniGames
+}
+
+func getGames(str string) []string {
+	return strings.Split(str, "; ")
+}
+
+func getGameColors(str string) []string {
+	return strings.Split(str, ", ")
+}
+
+func getColorCountPair(colorString string) []string {
+	return strings.Split(colorString, " ")
 }

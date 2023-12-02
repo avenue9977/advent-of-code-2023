@@ -1,8 +1,7 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"github.com/avenue9977/advent-of-code-2023/utils"
 	"os"
 	"strings"
 	"unicode"
@@ -24,14 +23,10 @@ var numbersMap = map[string]string{
 var numbers = []string{"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}
 
 func day1Part2() {
-	file, err := os.Open("./day01/input/day01.txt")
+	fileScanner, err := utils.GetFileScanner("./day01/input/day01.txt")
 	if err != nil {
-		fmt.Printf("error opening file: %v\n", err)
 		os.Exit(1)
 	}
-
-	fileScanner := bufio.NewScanner(file)
-	fileScanner.Split(bufio.ScanLines)
 
 	sum := 0
 
@@ -39,15 +34,10 @@ func day1Part2() {
 		line := fileScanner.Text()
 		digits := getNumberStringFromLine2(line)
 
-		sum += convertStringToInt(digits[0] + digits[len(digits)-1])
+		sum += utils.ConvertStringToInt(digits[0] + digits[len(digits)-1])
 	}
 
 	println(sum)
-
-	err = file.Close()
-	if err != nil {
-		return
-	}
 }
 
 func getNumberStringFromLine2(line string) []string {

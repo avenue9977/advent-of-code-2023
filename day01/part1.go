@@ -1,39 +1,28 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
+	"github.com/avenue9977/advent-of-code-2023/utils"
 	"os"
-	"strconv"
 	"unicode"
 )
 
 func day1Part1() {
-	file, err := os.Open("./day01/input/day01.txt")
+	fileScanner, err := utils.GetFileScanner("./day01/input/day01.txt")
 	if err != nil {
-		fmt.Printf("error opening file: %v\n", err)
 		os.Exit(1)
 	}
-
-	fileScanner := bufio.NewScanner(file)
-	fileScanner.Split(bufio.ScanLines)
 
 	sum := 0
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 		firstDigitString := getNumberStringFromLine(line)
-		secondDigitString := getNumberStringFromLine(reverseString(line))
+		secondDigitString := getNumberStringFromLine(utils.ReverseString(line))
 
-		sum += convertStringToInt(firstDigitString + secondDigitString)
+		sum += utils.ConvertStringToInt(firstDigitString + secondDigitString)
 	}
 
-	fmt.Printf("%d", sum)
-
-	err = file.Close()
-	if err != nil {
-		return
-	}
+	println(sum)
 }
 
 func getNumberStringFromLine(line string) string {
@@ -46,19 +35,4 @@ func getNumberStringFromLine(line string) string {
 	}
 
 	return digit
-}
-
-func convertStringToInt(char string) int {
-	number, err := strconv.Atoi(char)
-	if err != nil {
-		return 0
-	}
-	return number
-}
-
-func reverseString(str string) (result string) {
-	for _, v := range str {
-		result = string(v) + result
-	}
-	return
 }
