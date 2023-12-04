@@ -19,7 +19,7 @@ func day1Part1() {
 		firstDigitString := getNumberStringFromLine(line)
 		secondDigitString := getNumberStringFromLine(utils.ReverseString(line))
 
-		sum += utils.ConvertStringToInt(firstDigitString + secondDigitString)
+		sum += int(10*(firstDigitString[0]-'0') + (secondDigitString[0] - '0'))
 	}
 
 	println(sum)
