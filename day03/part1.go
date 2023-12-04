@@ -22,7 +22,7 @@ func day3Part1() {
 		os.Exit(1)
 	}
 
-	lines := [][]string{}
+	var lines [][]string
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
@@ -30,9 +30,19 @@ func day3Part1() {
 		lines = append(lines, lineSlice)
 	}
 
+	sum := 0
+
+	for _, part := range getParts(&lines) {
+		sum += getPartNumber(part, lines)
+	}
+
+	println(sum)
+}
+
+func getParts(lines *[][]string) []Part {
 	var parts []Part
 
-	for i, line := range lines {
+	for i, line := range *lines {
 		var numberString string
 
 		part := Part{
@@ -70,13 +80,7 @@ func day3Part1() {
 		}
 	}
 
-	sum := 0
-
-	for _, part := range parts {
-		sum += getPartNumber(part, lines)
-	}
-
-	println(sum)
+	return parts
 }
 
 func getAdjacentCharRunes(line []string, currentIndex int) (rune, rune) {
@@ -121,11 +125,11 @@ func getPartNumber(part Part, lines [][]string) int {
 	}
 
 	if part.lineIndex > 0 {
-		hasTopSymbol = getAdjacentLineSymbol(lines[part.lineIndex-1], part.startingIndex-1, part.endingIndex+1)
+		hasTopSymbol = hasAdjacentLineSymbol(lines[part.lineIndex-1], part.startingIndex-1, part.endingIndex+1)
 	}
 
 	if part.lineIndex < len(lines)-1 {
-		hasBottomSymbol = getAdjacentLineSymbol(lines[part.lineIndex+1], part.startingIndex-1, part.endingIndex+1)
+		hasBottomSymbol = hasAdjacentLineSymbol(lines[part.lineIndex+1], part.startingIndex-1, part.endingIndex+1)
 	}
 
 	if hasLeftSymbol || hasRightSymbol || hasTopSymbol || hasBottomSymbol {
@@ -135,7 +139,7 @@ func getPartNumber(part Part, lines [][]string) int {
 	return partNumber
 }
 
-func getAdjacentLineSymbol(line []string, fromIndex int, toIndex int) bool {
+func hasAdjacentLineSymbol(line []string, fromIndex int, toIndex int) bool {
 	lineSize := len(line) - 1
 	if fromIndex == -1 {
 		fromIndex = 0
