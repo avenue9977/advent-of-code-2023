@@ -8,6 +8,7 @@ import (
 )
 
 type Game struct {
+	id             string
 	playerNumbers  []string
 	winningNumbers []string
 }
@@ -28,6 +29,18 @@ func (game *Game) getPoints() int {
 	return sum
 }
 
+func (game *Game) getMatches() int {
+	matches := 0
+
+	for _, number := range game.playerNumbers {
+		if slices.Contains(game.winningNumbers, number) {
+			matches++
+		}
+	}
+
+	return matches
+}
+
 func day4Part1() {
 	fileScanner, err := utils.GetFileScanner("./day04/input/day04.txt")
 	if err != nil {
@@ -35,21 +48,26 @@ func day4Part1() {
 	}
 
 	sum := 0
+	idx := 0
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 		split := strings.Split(line, ":")
-		numbers := strings.Split(split[1], "|")
-
-		game := Game{
-			playerNumbers:  getGameNumbers(strings.Split(strings.TrimSpace(numbers[0]), " ")),
-			winningNumbers: getGameNumbers(strings.Split(strings.TrimSpace(numbers[1]), " ")),
-		}
-
+		game := getGame(string(idx), split)
 		sum += game.getPoints()
+		idx++
 	}
 
 	println(sum)
+}
+
+func getGame(idx string, gameString []string) *Game {
+	numbers := strings.Split(gameString[1], "|")
+	return &Game{
+		id:             idx,
+		playerNumbers:  getGameNumbers(strings.Split(strings.TrimSpace(numbers[0]), " ")),
+		winningNumbers: getGameNumbers(strings.Split(strings.TrimSpace(numbers[1]), " ")),
+	}
 }
 
 func getGameNumbers(str []string) []string {
